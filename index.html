@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Payment Kayzen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-2:#f5f6f8;
+  --text:#0b0b0c;
+  --muted:#6b7280;
+  --glass:rgba(255,255,255,.65);
+  --border:rgba(0,0,0,.08);
+  --shadow:rgba(0,0,0,.08);
+  --brand:linear-gradient(135deg,#0ea5e9,#8b5cf6,#22c55e);
+}
+[data-theme="dark"]{
+  --bg:#000000;
+  --bg-2:#0f0f12;
+  --text:#fafafa;
+  --muted:#a1a1aa;
+  --glass:rgba(20,20,22,.55);
+  --border:rgba(255,255,255,.12);
+  --shadow:rgba(0,0,0,.25);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--bg);
+  color:var(--text);
+  transition:.3s;
+}
+.bg-grad{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:var(--brand);
+  filter:blur(120px);
+  opacity:.25;
+  animation:shift 20s ease-in-out infinite;
+}
+@keyframes shift{
+  0%{transform:rotate(0deg) scale(1)}
+  50%{transform:rotate(180deg) scale(1.2)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+.container{
+  width:100%;
+  max-width:420px;
+  padding:24px;
+  text-align:center;
+}
+.page{display:none;animation:fade .4s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.logo{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
+  box-shadow:0 12px 32px var(--shadow);
+  animation:float 6s ease-in-out infinite;
+  margin:0 auto;
+}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+h1{font-size:28px;font-weight:600;margin-top:16px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:20px;font-weight:600;margin-bottom:12px}
+p{color:var(--muted);margin-bottom:24px}
+.btn,.product-btn{
+  flex:1;
+  padding:14px 28px;
+  border:none;
+  border-radius:16px;
+  font-weight:600;
+  background:var(--brand);
+  color:#fff;
+  cursor:pointer;
+  transition:transform .2s;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.glass-card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:20px;
+  backdrop-filter:blur(20px);
+  margin-bottom:20px;
+}
+.qr{width:100%;max-width:240px;border-radius:16px;margin-bottom:12px}
+.copy-row{display:flex;align-items:center;gap:12px;text-align:left}
+.copy-row .logo-sm{width:60px;height:60px;object-fit:contain;border-radius:14px;background:#fff}
+.copy-row .flex-col{flex:1;display:flex;flex-direction:column}
+.copy-row .title{font-weight:600;font-size:16px;line-height:1}
+.copy-row .number{font-weight:600;font-size:16px;color:var(--muted)}
+.copy-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:4px 8px;transition:color .2s}
+.copy-btn:hover{color:var(--text)}
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translate(-50%,0) scale(0);
+  background:var(--brand);color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;transition:transform .3s;
+}
+.toast.show{transform:translate(-50%,0) scale(1)}
+.top-bar{display:flex;justify-content:space-between;margin-bottom:16px}
+.bottom-bar{display:flex;gap:12px;margin-top:24px;justify-content:center;align-items:center;flex-wrap:wrap}
+.anim-btn{padding:12px 20px;border-radius:12px;border:none;background:var(--brand);color:#fff;font-size:16px;cursor:pointer;transition:transform .2s}
+.anim-btn:hover{transform:scale(1.05)}
+.footer{margin-top:40px;font-size:14px;color:var(--muted)}
+.products-list{display:flex;flex-direction:column;gap:12px}
+.product-item{position:relative;width:100%}
+.product-button{
+width:100%;padding:20px;border:none;border-radius:16px;
+background:var(--glass);border:1px solid var(--border);color:var(--text);
+cursor:pointer;transition:all .3s ease;backdrop-filter:blur(10px);text-align:left;
+}
+.product-button:hover{transform:translateY(-2px);box-shadow:0 8px 25px var(--shadow);border-color:rgba(14,165,233,0.3)}
+.product-info{display:flex;justify-content:space-between;align-items:center}
+.product-name{font-weight:600;font-size:16px;margin-bottom:4px}
+.product-price{font-size:14px;color:#0ea5e9;font-weight:500}
+.product-benefit{font-size:13px;color:var(--muted);margin-top:4px}
+.product-detail{display:none;background:var(--glass);border:1px solid var(--border);
+border-radius:16px;padding:24px;margin-top:12px;backdrop-filter:blur(20px);animation:fade .3s ease}
+.product-detail.show{display:block}
+.product-detail h3{font-size:20px;margin-bottom:12px}
+.product-detail .price{font-size:18px;color:#0ea5e9;font-weight:600;margin-bottom:8px}
+.product-detail .benefit-title{font-weight:600;margin:8px 0 4px}
+.product-detail .benefit{color:var(--muted);margin-bottom:20px;line-height:1.5}
+.buy-now-btn{width:100%;padding:16px;border:none;border-radius:16px;font-weight:600;font-size:16px;
+background:var(--brand);color:#fff;cursor:pointer;transition:transform .2s}
+.buy-now-btn:hover{transform:translateY(-2px)}
+
+/* LIST PAGE */
+.list-card{background:var(--glass);border:1px solid var(--border);border-radius:20px;padding:20px;margin-bottom:16px}
+.list-card h3{color:#0ea5e9;margin-bottom:8px;font-size:18px}
+.list-card ul{list-style:none;padding-left:0}
+.list-card li{background:transparent;border-bottom:1px solid var(--border);padding:8px 0;font-size:14px;color:var(--muted)}
+.list-card li:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="bg-grad"></div>
+<div class="container">
+  <!-- HOME -->
+  <section id="home" class="page active" aria-label="Home">
+    <img src="https://img1.pixhost.to/images/8007/632266897_kayzennotdev.jpg" alt="Logo Kayzen" class="logo">
+    <h1>Selamat Datang di Payment Kayzen</h1>
+    <p>Lakukan pembayaran dengan mudah dan cepat.</p>
+    <div class="bottom-bar">
+      <button class="btn" onclick="toPage('payment')">Payment</button>
+      <button class="btn" onclick="toPage('products')">Produk</button>
+      <button class="btn" onclick="toPage('list')">MySuport</button>
+      <button class="anim-btn" onclick="toggleTheme()" aria-label="Toggle tema">☀️</button>
+    </div>
+  </section>
+
+  <!-- PAYMENT -->
+  <section id="payment" class="page" aria-label="Payment">
+    <div class="top-bar">
+      <button class="anim-btn" onclick="toPage('home')">Kembali</button>
+      <div><button class="anim-btn" onclick="toggleTheme()" aria-label="Toggle tema">☀️</button></div>
+    </div>
+    <h2>QRIS Payment</h2>
+    <div style="text-align:center">
+      <img id="qris" src="https://img1.pixhost.to/images/8007/632270159_kayzennotdev.jpg" alt="QRIS" class="qr">
+    </div>
+    <h2>Metode Lainnya</h2>
+    <div class="glass-card">
+      <div class="copy-row">
+        <img src="https://img1.pixhost.to/images/8008/632283885_kayzennotdev.jpg" alt="DANA" class="logo-sm">
+        <div class="flex-col"><span class="title">DANA</span><span class="number">0882007195252</span></div>
+        <button class="copy-btn" onclick="copyText('0882007195252')">Salin</button>
+      </div>
+    </div>
+    <div class="glass-card">
+      <div class="copy-row">
+        <img src="https://img1.pixhost.to/images/8008/632284402_kayzennotdev.jpg" alt="GoPay" class="logo-sm">
+        <div class="flex-col"><span class="title">GoPay</span><span class="number">0882007195252</span></div>
+        <button class="copy-btn" onclick="copyText('0882007195252')">Salin</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="products" class="page" aria-label="Products">
+    <div class="top-bar">
+      <button class="anim-btn" onclick="toPage('home')">Kembali</button>
+      <div><button class="anim-btn" onclick="toggleTheme()" aria-label="Toggle tema">☀️</button></div>
+    </div>
+    <h2>LIST PRODUK KAYZEN</h2>
+    <div class="products-list" id="productsContainer"></div>
+  </section>
+
+  <!-- LIST PAGE -->
+  <section id="list" class="page" aria-label="List">
+    <div class="top-bar">
+      <button class="anim-btn" onclick="toPage('home')">Kembali</button>
+      <div><button class="anim-btn" onclick="toggleTheme()" aria-label="Toggle tema">☀️</button></div>
+    </div>
+    <h2>My Suport</h2>
+
+    <div class="list-card">
+      <h3>Mods Script Kayzen</h3>
+      <ul>
+        <li>COGANZ</li><li>AFDHL</li><li>DLAN</li><li>RAZZX</li><li>GITTZY</li><li>RULZ</li><li>GIO</li><li>Ikyy</li><li>LENN</li>
+      </ul>
+    </div>
+
+    <div class="list-card">
+      <h3>Tangan Kanan Script Kayzen</h3>
+      <ul>
+        <li>KANZZ OFFICIAL</li><li>KHAMIM</li><li>EKAYY</li><li>TRANZ</li><li>DREY</li><li>LEONEWERA</li><li>RULZ</li><li>SARCRAZZY</li><li>VINNBUG</li><li>SAAOFFC</li><li>AFIS</li><li>FANZZX</li><li>LIPZZ</li><li>CHIKA</li><li>DECHOZ</li><li>IKYY</li><li>DIKZZ</li><li>XENTT HOST</li><li>KYZZ</li><li>AZMIL</li><li>RIYAN</li><li>SARXE</li><li>AFFAN</li><li>APRYY</li><li>MARZ</li><li>JADEN</li><li>INOMODZZ</li><li>HANAFI TZY</li><li>MELVIN</li><li>DULL</li>
+      </ul>
+    </div>
+
+    <div class="list-card">
+      <h3>Partner Script Kayzen</h3>
+      <ul>
+        <li>GOPPA</li><li>ZRILZYHH</li><li>RAFFI</li><li>RAZOR</li><li>RELLZ</li><li>FIGZY</li><li>VITO</li><li>FAIRUZ</li><li>CACA</li><li>27SEPP</li><li>ASEP</li><li>GIZZYY</li><li>JUST</li><li>HANZZYU</li><li>FQV3RSE</li><li>GUNGZ OFFICALL</li><li>DAPZZHOSTING</li><li>ZUNUN</li><li>YAN</li><li>RAZAAN</li><li>NIZ</li><li>BIAN</li><li>DAPIN</li><li>BLYEE</li><li>YOGZZ</li><li>JONAS</li><li>VANZ</li><li>PIAA / ERIC</li><li>DIMZZ</li><li>TIFZZZ</li><li>CUT4NN</li><li>YAN</li><li>NIZ</li><li>GUNGZ</li><li>AKIRA</li><li>KANZZ OFFICIAL</li><li>DULL</li><li>VANZ OFFICIAL</li><li>RELLZXNJAA</li><li>BARTZYGTG</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="footer">© 2025 kayzennotdev</div>
+</div>
+<div id="toast" class="toast">Copied ✅</div>
+
+<script>
+/* === DATA PRODUK === */
+const products = [
+  {name:"Script Bug Kayzen",price:"Rp 15.000",benefit:`Script Bug Kayzen Terbaru`},
+  {name:"Reseller Script",price:"Rp 40.000",benefit:`• BISA JUAL SC<br>• BISA OPEN P.O SC<br>• FREE UP PERMANENT<br>• BISA ADD DB SENDIRI<br>• DLL`},
+  {name:"Partner Script",price:"Rp 60.000",benefit:`• BISA JUAL SC<br>• BISA OPEN P.O SC<br>• FREE UP PERMANENT<br>• BISA ADD DB SENDIRI<br>• BISA OPEN RESELLER SC<br>• JADI ADMIN DI GRUB ADD DB<br>• DLL`},
+  {name:"Tangan Kanan Script",price:"Rp 100.000",benefit:`• BISA JUAL SC<br>• BISA OPEN P.O SC<br>• FREE UP PERMANENT<br>• BISA ADD DB SENDIRI<br>• BISA OPEN RESELLER SC<br>• BISA OPEN PARTNER SC<br>• NAMA DIPASANG DI SCRIPT<br>• FREE BASE SC NO ENC<br>• FREE SC ADD DB NO ENC 100%<br>• JADI ADMIN DI GRUB ADD DB<br>• FREE FUNC (KADANG)<br>• FREE ADMIN CH 1RB FLLOWERS<br>• DLL`},
+  {name:"Mods Script",price:"Rp 150.000",benefit:`• BISA JUAL SC<br>• BISA OPEN P.O SC<br>• FREE UP PERMANENT<br>• BISA ADD DB SENDIRI<br>• BISA OPEN RESELLER SC<br>• BISA OPEN PARTNER SC<br>• BISA OPEN TANGAN KANAN<br>• NAMA DIPASANG DI SCRIPT<br>• DAPET SC NO ENC<br>• FREE SC ADD DB NO ENC 100%<br>• JADI ADMIN DI GRUB ADD DB<br>• FREE FUNC SETIAP UPDATE<br>• GET ADMIN CH UTAMA (3RB P)<br>• DIBANTU PUSH CH DI SC<br>• DLL`},
+  {name:"Web Payment",price:"Rp 10.000 - 30.000",benefit:`1. FREE REQ TAMPILAN<br>2. FREE REQ DOMAIN<br>3. BISA TAMBAHIN ALL PAYMENT<br>4. GARANSI 1 TAHUN`}
+];
+
+/* === THEME === */
+const root=document.documentElement;const themeKey='kayzen-theme';
+function applyTheme(t){root.setAttribute('data-theme',t);localStorage.setItem(themeKey,t);}
+function initTheme(){
+  const saved=localStorage.getItem(themeKey);
+  const prefers=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  applyTheme(saved||prefers);
+}
+function toggleTheme(){
+  const current=root.getAttribute('data-theme');
+  const next=current==='dark'?'light':'dark';
+  applyTheme(next);
+}
+initTheme();
+
+/* === NAVIGASI === */
+function toPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.product-detail').forEach(d=>d.classList.remove('show'));
+}
+
+/* === COPY CLIPBOARD === */
+function copyText(text){
+  navigator.clipboard.writeText(text).then(()=>{
+    const toast=document.getElementById('toast');
+    toast.textContent='Nomor disalin ✅';
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),2000);
+  });
+}
+
+/* === RENDER PRODUK === */
+const productsContainer=document.getElementById('productsContainer');
+products.forEach((p,i)=>{
+  const productDiv=document.createElement('div');
+  productDiv.className='product-item';
+  productDiv.innerHTML=`
+    <button class="product-button" onclick="showProductDetail(${i})">
+      <div class="product-info">
+        <div><div class="product-name">${p.name}</div><div class="product-price">${p.price}</div></div>
+      </div>
+      <div class="product-benefit"><strong>Benefit:</strong><br>${p.benefit}</div>
+    </button>
+    <div class="product-detail" id="detail-${i}">
+      <h3>${p.name}</h3>
+      <div class="price">${p.price}</div>
+      <div class="benefit-title">Benefit:</div>
+      <div class="benefit">${p.benefit}</div>
+      <button class="buy-now-btn" onclick="buyNow()">Beli Sekarang</button>
+    </div>`;
+  productsContainer.appendChild(productDiv);
+});
+
+/* === FUNGSI PRODUK === */
+function showProductDetail(index){
+  document.querySelectorAll('.product-detail').forEach(d=>d.classList.remove('show'));
+  document.getElementById(`detail-${index}`).classList.add('show');
+}
+function buyNow(){toPage('payment');}
+</script>
+</body>
+</html>
